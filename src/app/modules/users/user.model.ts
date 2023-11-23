@@ -54,11 +54,15 @@ export const OrderSchema = new Schema<TOrder>({
 
 
   
-  // using instance methods to
+  // statics methods for get specific user 
   UserSchema.statics.isUserExists =async function (id: string){
   const existingUser = await User.findOne({userId: id, password: {$exists: true}})
-  return existingUser
+  if(existingUser ===null || !existingUser) return false
+  return true
 }
+
+
+
 
 
  export const User = model<TUser, UserModel>("user", UserSchema)

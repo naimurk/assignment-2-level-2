@@ -65,8 +65,32 @@ const getSpecificUser = async (req: Request, res: Response) => {
   }
 };
 
+
+
+
+const deleteSpecificUser = async(req:Request, res:Response) => {
+  try {
+    // console.log(req.params)
+    const id = req.params.userId;
+    const result = await userService.deleteSpecificUser(id);
+    res.status(200).json({
+      success: true,
+      message: "successfully deleted",
+      data: result,
+    });
+  } catch (error:any) {
+    res.status(500).json({
+      success: false,
+      message: "something went wrong",
+      //
+      error: error.message,
+    });
+  }
+}
+
 export const userController = {
   userIntoDb,
   getAllUserControllers,
   getSpecificUser,
+  deleteSpecificUser
 };

@@ -20,6 +20,9 @@ router.get("/users/:userId", userController.getSpecificUser )
 // update specific users
 router.put("/users/:userId")
 
+// delete specific users
+router.delete("/users/:userId", userController.deleteSpecificUser)
+
 export const StudentRoutes:Router = router
 
 
