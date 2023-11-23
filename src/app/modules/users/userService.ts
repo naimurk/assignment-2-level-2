@@ -1,3 +1,4 @@
+
 import { TUser } from "./user.interface";
 import { User } from "./user.model";
 
@@ -24,7 +25,30 @@ const getAllUser = async ()=> {
 }
 
 
+
+
+
+const getSpecificUser = async (id: string) => {
+  try {
+    // const result = await User.findOne({ userId: id, password: {$exists: true} });
+     const result = await User.isUserExists(id)
+
+    if(!result){
+      throw new Error ("user does not exist")
+    }
+
+    return result
+
+  } catch (error) {
+    // console.log(error);
+    // Handle the error appropriately
+    throw new Error("Failed to get specific user");
+  }
+};
+
+
 export const userService = {
     createUserIntoDb,
-    getAllUser
+    getAllUser,
+    getSpecificUser
 }

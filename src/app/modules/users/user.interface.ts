@@ -1,3 +1,4 @@
+import { Model } from "mongoose";
 
 
 export type TOrder = {
@@ -30,3 +31,21 @@ export type TUser = {
     orders: Array<TOrder>;
 
 }
+
+
+// for instance
+// export type UserMethods = {
+//     isUserExists(passId: string): Promise<TUser | null>
+//   }
+  
+//   // for instance
+//   export type UserModel = Model<
+//   TUser,
+//   Record<string, never>,
+//   UserMethods
+//   >
+
+export interface UserModel extends Model<TUser> {
+    isUserExists(userId: string): Promise<TUser | null>
+  }
+  
