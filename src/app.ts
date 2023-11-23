@@ -1,7 +1,6 @@
-import express from "express"
+import express, { Application } from "express"
 import cors from "cors"
-const app = express()
-const port = 3000
+const app:Application = express()
 
 // parsers
 app.use(express.json())
