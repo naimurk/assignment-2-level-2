@@ -1,3 +1,4 @@
+import { TUser } from './user.interface';
 import { Request, Response } from "express";
 import { UserSchemaZod } from "./user.validation";
 import { userService } from "./userService";
@@ -65,7 +66,27 @@ const getSpecificUser = async (req: Request, res: Response) => {
   }
 };
 
-
+//  update specific user 
+const updateSpecificUser = async(req: Request, res: Response)=> {
+  try {
+    // console.log(req.params)
+    const id = req.params.userId;
+    const {user:userData}= req.body
+    const result = await userService.updateSpecificUser(id, userData);
+    res.status(200).json({
+      success: true,
+      message: "successfully updated",
+      data: result,
+    });
+  } catch (error:any) {
+    res.status(500).json({
+      success: false,
+      message: "something went wrong",
+      //
+      error: error.message,
+    });
+  }
+}
 
 
 const deleteSpecificUser = async(req:Request, res:Response) => {
@@ -92,5 +113,6 @@ export const userController = {
   userIntoDb,
   getAllUserControllers,
   getSpecificUser,
-  deleteSpecificUser
+  deleteSpecificUser,
+  updateSpecificUser
 };

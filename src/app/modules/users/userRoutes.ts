@@ -18,7 +18,7 @@ router.get("/users/:userId", userController.getSpecificUser )
 
 
 // update specific users
-router.put("/users/:userId")
+router.put("/users/:userId" ,userController.updateSpecificUser)
 
 // delete specific users
 router.delete("/users/:userId", userController.deleteSpecificUser)

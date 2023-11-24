@@ -47,12 +47,53 @@ const getSpecificUser = async (id: string) => {
 
 
 // specific user update
-const updateSpecificUser = async (updateData: TUser)=> {
+const updateSpecificUser = async ( id: string,updateData: TUser,)=> {
   try {
-    const {}
+    const {userName, address, age,email, fullName, hobbies,isActive,}= updateData;
+
+    // console.log(updateData)
+
+    const user = await User.isUserExists(id)
+
+    if(!user || user === null){
+      // console.log("usr not found")
+      throw new Error ("user does not exist")
+    }
+
+     
+      const result =  await User.updateOne(
+        {userId: id},
+        {
+          $set: {
+            userName: userName,
+            "address.street": address.street,
+            "address.country": address.country,
+            "address.city": address.city,
+            age: age,
+            email: email,
+            "fullName.firstName": fullName.firstName,
+            "fullName.lastName": fullName.lastName,
+            isActive: isActive,
+          },
+          $addToSet: {hobbies: hobbies}
+        }
+  
+        
+        )
+        if(result.modifiedCount === 1) {
+         return await User.findOne({userId: id})
+        }
+        // return result
+     
+// console.log(result)
+    
+
+
      
   } catch (error) {
-    console.log(error)
+    // console.log(error)
+    throw new Error("cant updated");
+
   }
 }
 
@@ -80,6 +121,6 @@ export const userService = {
     createUserIntoDb,
     getAllUser,
     getSpecificUser,
-    // updateSpecificUser
+    updateSpecificUser,
     deleteSpecificUser
 }
