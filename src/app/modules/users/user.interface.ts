@@ -7,7 +7,7 @@ export type TOrder = {
     quantity: number;
 }
 
-export type TAddress = {
+export type TAddress  = {
     street: string;
     city: string;
     country: string;
@@ -28,7 +28,7 @@ export type TUser = {
     isActive: true | false;
     hobbies: Array<string>;
     address : TAddress
-    orders: Array<TOrder>;
+    orders: Array<TOrder> | [];
 
 }
 

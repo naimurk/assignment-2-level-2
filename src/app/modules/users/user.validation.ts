@@ -12,7 +12,7 @@ const AddressSchemaZod = z.object({
   country: z.string(),
 })
 
-const OrderSchemaZod = z.object({
+export const OrderSchemaZod = z.object({
   productName: z.string(),
   price: z.number(),
   quantity: z.number(),
@@ -28,6 +28,6 @@ const OrderSchemaZod = z.object({
   hobbies: z.array(z.string()).min(1),
   isActive: z.boolean(),
   userName: z.string(),
-  orders: z.array(OrderSchemaZod).min(1),
+  orders: z.array(OrderSchemaZod).min(0).default([]),
 })
 

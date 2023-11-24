@@ -23,6 +23,9 @@ router.put("/users/:userId" ,userController.updateSpecificUser)
 // delete specific users
 router.delete("/users/:userId", userController.deleteSpecificUser)
 
+
+router.put("/users/:userId/orders", userController.addOrder)
+
 export const StudentRoutes:Router = router
 
 

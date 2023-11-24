@@ -34,7 +34,7 @@ export const OrderSchema = new Schema<TOrder>({
    hobbies: {type: [String] , required: true},
    isActive: {type: Boolean , required: true},
    userName: {type: String, required: true},
-   orders: {type: [OrderSchema], required: true}
+   orders: {type: [OrderSchema], default:[],}
 })
 
   
