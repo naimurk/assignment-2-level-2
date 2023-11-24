@@ -139,11 +139,32 @@ const addOrder = async (id:string, orderData:TOrder)=>{
   }
 }
 
+
+// get order a specific user
+const getOrder = async (id: string) => {
+  try {
+    // const result = await User.findOne({ userId: id, password: {$exists: true} });
+     const result = await User.isUserExists(id)
+
+    if(!result || result === null){
+      throw new Error ("user does not exist")
+    }
+
+    return await User.findOne({ userId: id },{orders: 1})
+
+  } catch (error) {
+    // console.log(error);
+    // Handle the error appropriately
+    throw new Error("Failed to get specific user");
+  }
+};
+
 export const userService = {
     createUserIntoDb,
     getAllUser,
     getSpecificUser,
     updateSpecificUser,
     deleteSpecificUser,
-    addOrder
+    addOrder,
+    getOrder
 }

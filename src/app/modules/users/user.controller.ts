@@ -137,6 +137,30 @@ try {
 }
 
 
+// get specific users orders
+const getOrders = async (req: Request, res: Response) => {
+  try {
+    // console.log(req.params)
+    const id = req.params.userId;
+    const result = await userService.getOrder(id);
+    res.status(200).json({
+      success: true,
+      message: "successfully fetched all user controllers",
+      data: result,
+    });
+  } catch (error:any) {
+    res.status(500).json({
+      success: false,
+      message: "something went wrong",
+      //
+      error: error.message,
+    });
+  }
+}
+
+
+
+
 
 export const userController = {
   userIntoDb,
@@ -144,5 +168,6 @@ export const userController = {
   getSpecificUser,
   deleteSpecificUser,
   updateSpecificUser,
-  addOrder
+  addOrder,
+  getOrders
 };
