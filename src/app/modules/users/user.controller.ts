@@ -158,6 +158,26 @@ const getOrders = async (req: Request, res: Response) => {
   }
 }
 
+const getAllPrice = async ( req: Request, res:Response)=> {
+  try {
+    // console.log(req.params)
+    const id = req.params.userId;
+    const result = await userService.getAllPrice(id);
+    res.status(200).json({
+      success: true,
+      message: "successfully",
+      data: result,
+    });
+  } catch (error:any) {
+    res.status(500).json({
+      success: false,
+      message: "something went wrong",
+      //
+      error: error.message,
+    });
+  }
+}
+
 
 
 
@@ -169,5 +189,6 @@ export const userController = {
   deleteSpecificUser,
   updateSpecificUser,
   addOrder,
-  getOrders
+  getOrders,
+  getAllPrice
 };

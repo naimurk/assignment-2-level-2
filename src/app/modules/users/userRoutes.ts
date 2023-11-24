@@ -29,6 +29,11 @@ router.put("/users/:userId/orders", userController.addOrder)
 // get order data by specific user
 router.get("/users/:userId/orders", userController.getOrders)
 
+// get all price for specific user
+router.get("/users/:userId/orders/total-price",userController.getAllPrice)
+
 export const StudentRoutes:Router = router
+
+
 
 
