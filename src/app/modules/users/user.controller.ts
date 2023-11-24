@@ -1,4 +1,4 @@
-import { TOrder, TUser } from './user.interface';
+import { TOrder } from './user.interface';
 import { Request, Response } from "express";
 import { OrderSchemaZod, UserSchemaZod } from "./user.validation";
 import { userService } from "./userService";
@@ -6,7 +6,7 @@ import { userService } from "./userService";
 // insert a new user into db controller
 const userIntoDb = async (req: Request, res: Response) => {
   try {
-    const { user: userData } = req.body;
+    const  userData  = req.body;
     const zodData = UserSchemaZod.parse({...userData, orders:[]});
     const result = await userService.createUserIntoDb(zodData);
 
@@ -15,6 +15,7 @@ const userIntoDb = async (req: Request, res: Response) => {
       message: "User created successfully!",
       data: result,
     });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error:any) {
     // console.log(error)
     res.status(404).json({
@@ -38,6 +39,7 @@ const getAllUserControllers = async (req: Request, res: Response) => {
       message: "Users fetched successfully!",
       data: result,
     });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error:any) {
     res.status(404).json({
       success: false,
@@ -62,6 +64,7 @@ const getSpecificUser = async (req: Request, res: Response) => {
       message: "User fetched successfully!",
       data: result,
     });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error:any) {
     res.status(404).json({
       success: false,
@@ -89,6 +92,7 @@ const updateSpecificUser = async(req: Request, res: Response)=> {
       message: "User updated successfully!",
       data: result,
     });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error:any) {
     res.status(404).json({
       success: false,
@@ -113,6 +117,7 @@ const deleteSpecificUser = async(req:Request, res:Response) => {
       message: "successfully deleted",
       data: null,
     });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error:any) {
     res.status(404).json({
       success: false,
@@ -140,6 +145,7 @@ try {
     message: "order created successfully",
     data: null,
   });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 } catch (error:any) {
   res.status(404).json({
     success: false,
@@ -166,6 +172,7 @@ const getOrders = async (req: Request, res: Response) => {
       message: "Order fetched successfully!",
       data: result,
     });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error:any) {
     res.status(404).json({
       success: false,
@@ -189,6 +196,7 @@ const getAllPrice = async ( req: Request, res:Response)=> {
       message: "Total price calculated successfully!",
       data: result,
     });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error:any) {
     res.status(404).json({
       success: false,

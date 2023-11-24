@@ -3,7 +3,6 @@ import { TAddress, TOrder, TUser, TUserName, UserModel, } from "./user.interface
 
 import bcrypt from "bcrypt"
 import config from "../../config";
-import { string } from "zod";
 
 
  export const UserNameSchema = new Schema<TUserName> ({
