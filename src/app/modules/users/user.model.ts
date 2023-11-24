@@ -3,6 +3,7 @@ import { TAddress, TOrder, TUser, TUserName, UserModel, } from "./user.interface
 
 import bcrypt from "bcrypt"
 import config from "../../config";
+import { string } from "zod";
 
 
  export const UserNameSchema = new Schema<TUserName> ({
@@ -57,9 +58,27 @@ export const OrderSchema = new Schema<TOrder>({
   // statics methods for get specific user 
   UserSchema.statics.isUserExists =async function (id: string){
   const existingUser = await User.findOne({userId: id, password: {$exists: true}})
-  if(existingUser ===null || !existingUser) return false
+  if(existingUser === null || !existingUser) return false
   return true
+
+
 }
+  // statics methods for get specific user 
+  UserSchema.statics.isUserIdAndEmailExist =async function (id: string ,email?: string){
+   if(id &&email) {
+    const existingUser = await User.findOne({userId: id, email: email,password: {$exists: true}})
+    if(existingUser === null || !existingUser) return false
+    return true
+   }
+   
+   if(id){
+    const existingUser = await User.findOne({userId: id ,password: {$exists: true}})
+    if(existingUser === null || !existingUser) return false
+    return true
+   }
+
+
+  }
 
 
 

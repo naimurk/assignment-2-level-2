@@ -12,16 +12,19 @@ const userIntoDb = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: "successfully created",
+      message: "User created successfully!",
       data: result,
     });
-  } catch (error) {
+  } catch (error:any) {
     // console.log(error)
-    res.status(500).json({
+    res.status(404).json({
       success: false,
-      message: "something went wrong",
+      message: error.message || null,
       //
-      error: error,
+      error: {
+        code: 404,
+        description: error?.message || null
+    }
     });
   }
 };
@@ -32,15 +35,18 @@ const getAllUserControllers = async (req: Request, res: Response) => {
     const result = await userService.getAllUser();
     res.status(200).json({
       success: true,
-      message: "successfully fetched all user controllers",
+      message: "Users fetched successfully!",
       data: result,
     });
-  } catch (error) {
-    res.status(500).json({
+  } catch (error:any) {
+    res.status(404).json({
       success: false,
-      message: "something went wrong",
+      message: error.message || null,
       //
-      error: error,
+      error: {
+        code: 404,
+        description: error?.message || null
+    }
     });
   }
 };
@@ -53,15 +59,18 @@ const getSpecificUser = async (req: Request, res: Response) => {
     const result = await userService.getSpecificUser(id);
     res.status(200).json({
       success: true,
-      message: "successfully fetched all user controllers",
+      message: "User fetched successfully!",
       data: result,
     });
   } catch (error:any) {
-    res.status(500).json({
+    res.status(404).json({
       success: false,
-      message: "something went wrong",
+      message: error.message || null,
       //
-      error: error.message,
+      error: {
+        code: 404,
+        description: error?.message || null
+    }
     });
   }
 };
@@ -71,21 +80,24 @@ const updateSpecificUser = async(req: Request, res: Response)=> {
   try {
     // console.log(req.params)
     const id = req.params.userId;
-    const {user:userData}= req.body
-    const zodData = UserSchemaZod.parse(userData);
+    const userData= req.body
+    // const zodData = UserSchemaZod.parse(userData);
 
-    const result = await userService.updateSpecificUser(id, zodData);
+    const result = await userService.updateSpecificUser(id, userData);
     res.status(200).json({
       success: true,
-      message: "successfully updated",
+      message: "User updated successfully!",
       data: result,
     });
   } catch (error:any) {
-    res.status(500).json({
+    res.status(404).json({
       success: false,
-      message: "something went wrong",
+      message: error.message || null,
       //
-      error: error.message,
+      error: {
+        code: 404,
+        description: error?.message || null
+    }
     });
   }
 }
@@ -99,14 +111,17 @@ const deleteSpecificUser = async(req:Request, res:Response) => {
     res.status(200).json({
       success: true,
       message: "successfully deleted",
-      data: result,
+      data: null,
     });
   } catch (error:any) {
-    res.status(500).json({
+    res.status(404).json({
       success: false,
-      message: "something went wrong",
+      message: error.message || null,
       //
-      error: error.message,
+      error: {
+        code: 404,
+        description: error?.message || null
+    }
     });
   }
 }
@@ -122,15 +137,18 @@ try {
   const result = await userService.addOrder(id, zodData);
   res.status(200).json({
     success: true,
-    message: "successfully add order",
-    data: result,
+    message: "order created successfully",
+    data: null,
   });
 } catch (error:any) {
-  res.status(500).json({
+  res.status(404).json({
     success: false,
-    message: "something went wrong",
+    message: error.message || null,
     //
-    error: error.message,
+    error: {
+      code: 404,
+      description: error?.message || null
+  }
   });
 }
 
@@ -145,15 +163,18 @@ const getOrders = async (req: Request, res: Response) => {
     const result = await userService.getOrder(id);
     res.status(200).json({
       success: true,
-      message: "successfully fetched all user controllers",
+      message: "Order fetched successfully!",
       data: result,
     });
   } catch (error:any) {
-    res.status(500).json({
+    res.status(404).json({
       success: false,
-      message: "something went wrong",
+      message: error.message || null,
       //
-      error: error.message,
+      error: {
+        code: 404,
+        description: error?.message || null
+    }
     });
   }
 }
@@ -165,15 +186,18 @@ const getAllPrice = async ( req: Request, res:Response)=> {
     const result = await userService.getAllPrice(id);
     res.status(200).json({
       success: true,
-      message: "successfully",
+      message: "Total price calculated successfully!",
       data: result,
     });
   } catch (error:any) {
-    res.status(500).json({
+    res.status(404).json({
       success: false,
-      message: "something went wrong",
+      message: error.message || null,
       //
-      error: error.message,
+      error: {
+        code: 404,
+        description: error?.message || null
+    }
     });
   }
 }
