@@ -25,7 +25,7 @@ export const OrderSchema = new Schema<TOrder>({
 
 
  export const UserSchema = new Schema<TUser,UserModel >({
-   userId : {type: String, required: true , unique: true},
+   userId : {type: Number, required: true , unique: true},
    email: {type: String, required: true , unique: true},
    password: {type: String, required: true },
    fullName: {type: UserNameSchema, required: true},
@@ -33,14 +33,18 @@ export const OrderSchema = new Schema<TOrder>({
    age: {type: Number , required: true},
    hobbies: {type: [String] , required: true},
    isActive: {type: Boolean , required: true},
-   userName: {type: String, required: true},
-   orders: {type: [OrderSchema], default:[],}
+   username: {type: String, required: true},
+   orders: {type: [OrderSchema], default:[]}
 })
 
   
   UserSchema.pre("save", async function (next){
    // eslint-disable-next-line @typescript-eslint/no-this-alias
    const user = this;
+   
+   if (isNaN(user.userId)) {
+     throw new Error ("Id must be a number")
+   }
    user.password = await bcrypt.hash(user.password , Number(config.BCRYPT_SALT_ROUNDS));
    next();
 
@@ -48,6 +52,7 @@ export const OrderSchema = new Schema<TOrder>({
 
   UserSchema.post("save", async function (doc , next){
     doc.set("password", undefined);
+    doc.set("orders", undefined)
    next()
   })
 
@@ -55,13 +60,13 @@ export const OrderSchema = new Schema<TOrder>({
 
   
   // statics methods for get specific user 
-  UserSchema.statics.isUserExists =async function (id: string){
-  const existingUser = await User.findOne({userId: id, password: {$exists: true}})
-  if(existingUser === null || !existingUser) return false
-  return true
+//   UserSchema.statics.isUserExists =async function (id: string){
+//   const existingUser = await User.findOne({userId: id, password: {$exists: true}})
+//   if(existingUser === null || !existingUser) return false
+//   return true
 
 
-}
+// }
   // statics methods for get specific user 
   UserSchema.statics.isUserIdAndEmailExist =async function (id: string ,email?: string){
    if(id &&email) {

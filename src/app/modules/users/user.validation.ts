@@ -19,7 +19,7 @@ export const OrderSchemaZod = z.object({
 })
 
  export const UserSchemaZod = z.object({
-  userId: z.string(),
+  userId: z.number(),
   email: z.string().email(),
   password: z.string(),
   fullName: UserNameSchemaZod,
@@ -27,7 +27,21 @@ export const OrderSchemaZod = z.object({
   age: z.number().min(0),
   hobbies: z.array(z.string()).min(1),
   isActive: z.boolean(),
-  userName: z.string(),
+  username: z.string(),
   orders: z.array(OrderSchemaZod).min(0).default([]),
 })
+
+
+export const UserUpdateSchemaZod = z.object({
+  userId: z.number().optional(),
+  email: z.string().email().optional(),
+  password: z.string().optional(),
+  fullName: UserNameSchemaZod.optional(),
+  address: AddressSchemaZod.optional(),
+  age: z.number().min(0).optional(),
+  hobbies: z.array(z.string()).min(1).optional(),
+  isActive: z.boolean().optional(),
+  username: z.string().optional(),
+  orders: z.array(OrderSchemaZod).min(0).default([]).optional(),
+});
 

@@ -4,7 +4,7 @@ import { User } from "./user.model";
 // insert a new user in db Service
 const createUserIntoDb = async (userData: TUser) => {
   
-  const result = await User.isUserExists(userData.userId, userData.email);
+  const result = await User.isUserIdAndEmailExist(userData.userId, userData.email);
   if(result){
     throw new Error(`User  already exists)`)
   }
@@ -29,52 +29,55 @@ const getAllUser = async () => {
 const getSpecificUser = async (id: string) => {
   
     // const result = await User.findOne({ userId: id, password: {$exists: true} });
-    const result = await User.isUserExists(id);
+    const exist = await User.isUserIdAndEmailExist(id);
 
-    if (!result || result === null) {
+    if (!exist || exist === null) {
       throw new Error("user not found");
     }
 
-    return await User.findOne({ userId: id },{email:1, fullName:1, address:1, userName:1, userId:1,age:1,hobbies:1});
- 
+  const result = await User.findOne({ userId: id },{password: 0 , orders: 0});
+  return result
 };
 
 
 
 // specific user update
-const updateSpecificUser = async (id: string, updateData: TUser) => {
+const updateSpecificUser = async (id: string, updateData: Partial<TUser>) => {
   
-    const { userName, address, age, email, fullName, hobbies, isActive } =
+    const { username, address, age, email, fullName, hobbies, isActive } =
       updateData;
 
     // console.log(updateData)
 
-    const user = await User.isUserExists(id);
+    const user = await User.isUserIdAndEmailExist(id);
 
     if (!user || user === null) {
       // console.log("usr not found")
       throw new Error("user not found");
     }
 
+  
     const result = await User.updateOne(
       { userId: id },
       {
         $set: {
-          userName: userName,
-          "address.street": address.street,
-          "address.country": address.country,
-          "address.city": address.city,
+          userName: username,
+          "address.street": address && address.street,
+          "address.country": address && address.country,
+          "address.city": address && address.city,
           age: age,
           email: email,
-          "fullName.firstName": fullName.firstName,
-          "fullName.lastName": fullName.lastName,
+          "fullName.firstName": fullName &&  fullName.firstName,
+          "fullName.lastName": fullName&& fullName.lastName,
           isActive: isActive,
         },
         $addToSet: { hobbies: hobbies },
       }
+      // updateData,{new: true}
     );
-    if (result.modifiedCount === 1) {
-      return await User.findOne({ userId: id },{email:1, fullName:1, address:1, userName:1, userId:1,age:1,hobbies:1});
+  
+    if ( result.modifiedCount === 1) {
+      return await User.findOne({ userId: id },{password: 0 , orders: 0});
     }
     else{
       throw new Error("not modified");
@@ -87,7 +90,7 @@ const updateSpecificUser = async (id: string, updateData: TUser) => {
 const deleteSpecificUser = async (id: string) => {
   
     // const result = await User.findOne({ userId: id, password: {$exists: true} });
-    const result = await User.isUserExists(id);
+    const result = await User.isUserIdAndEmailExist(id);
 
     if (!result || result === null) {
       throw new Error("user not found");
@@ -101,7 +104,7 @@ const deleteSpecificUser = async (id: string) => {
 const addOrder = async (id: string, orderData: TOrder) => {
   
    
-    const result = await User.isUserExists(id);
+    const result = await User.isUserIdAndEmailExist(id);
 
     if (!result || result === null) {
       throw new Error("user not fount");
@@ -126,7 +129,7 @@ const addOrder = async (id: string, orderData: TOrder) => {
 const getOrder = async (id: string) => {
   
     // const result = await User.findOne({ userId: id, password: {$exists: true} });
-    const result = await User.isUserExists(id);
+    const result = await User.isUserIdAndEmailExist(id);
 
     if (!result || result === null) {
       throw new Error("user not found");
@@ -138,29 +141,80 @@ const getOrder = async (id: string) => {
 
 // get all price for specified user order
 const getAllPrice = async (id: string) => {
-  const result = await User.isUserExists(id);
-
+  const result = await User.isUserIdAndEmailExist(id);
+  
   if (!result || result === null) {
     throw new Error("user not found");
   }
+  
+  // console.log("hello")
 
-  return await User.aggregate([
+  const data =  await User.aggregate([
     { $match: { userId: id } },
-    { $unwind: "$orders" },
-    {
-      $project: {
-        productName: 1,
-        price: 1,
-        quantity: 1,
-        totalPrice: { $multiply: ["$orders.price", "$orders.quantity"] },
-      },
-    },
-    {
-      $group: { _id: "userId", totalPrice: { $sum: "$totalPrice" } },
-    },
-    {$project: {_id: 0}}
+    
+    
+
   ]);
+
+  
+
+  return data
+
+ 
 };
+
+
+// { $unwind: "$orders" },
+    // {
+    //   $project: {
+    //     productName: 1,
+    //     price: 1,
+    //     quantity: 1,
+    //     totalPrice: { $multiply: ["$orders.price", "$orders.quantity"] },
+    //   },
+    // },
+    // {
+    //   $group: { _id: "userId", totalPrice: { $sum: "$totalPrice" } },
+    // },
+    // {$project: {_id: 0 , }}
+
+
+// // get all price for specified user order
+// const getAllPrice = async (id: string) => {
+//   const result = await User.isUserIdAndEmailExist(id);
+
+//   if (!result || result === null) {
+//     throw new Error("user not found");
+//   }
+
+//   const data = await User.aggregate([
+//     { $match: { userId: id } },
+//     { $unwind: "$orders" },
+//     {
+//       $project: {
+//         _id: 0,
+//         productName: "$orders.productName",
+//         price: "$orders.price",
+//         quantity: "$orders.quantity",
+//         totalPrice: { $multiply: ["$orders.price", "$orders.quantity"] },
+//       },
+//     },
+//     {
+//       $group: {
+//         _id: null,
+//         totalPrice: { $sum: "$totalPrice" },
+//       },
+//     },
+//     {
+//       $project: {
+//         _id: 0,
+//         totalPrice: 1,
+//       },
+//     },
+//   ]);
+
+//   return data;
+// };
 
 export const userService = {
   createUserIntoDb,

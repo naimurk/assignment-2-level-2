@@ -1,13 +1,14 @@
 import { TOrder } from './user.interface';
 import { Request, Response } from "express";
-import { OrderSchemaZod, UserSchemaZod } from "./user.validation";
+import { OrderSchemaZod, UserSchemaZod, UserUpdateSchemaZod } from "./user.validation";
 import { userService } from "./userService";
+
 
 // insert a new user into db controller
 const userIntoDb = async (req: Request, res: Response) => {
   try {
     const  userData  = req.body;
-    const zodData = UserSchemaZod.parse({...userData, orders:[]});
+    const zodData = UserSchemaZod.parse(userData);
     const result = await userService.createUserIntoDb(zodData);
 
     res.status(200).json({
@@ -56,13 +57,16 @@ const getAllUserControllers = async (req: Request, res: Response) => {
 // get specific user
 const getSpecificUser = async (req: Request, res: Response) => {
   try {
-    // console.log(req.params)
+  
     const id = req.params.userId;
+    // console.log(typeof id)
+    
     const result = await userService.getSpecificUser(id);
     res.status(200).json({
       success: true,
       message: "User fetched successfully!",
       data: result,
+
     });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error:any) {
@@ -84,9 +88,9 @@ const updateSpecificUser = async(req: Request, res: Response)=> {
     // console.log(req.params)
     const id = req.params.userId;
     const userData= req.body
-    // const zodData = UserSchemaZod.parse(userData);
+    const zodData = UserUpdateSchemaZod.parse(userData);
 
-    const result = await userService.updateSpecificUser(id, userData);
+    const result = await userService.updateSpecificUser(id, zodData);
     res.status(200).json({
       success: true,
       message: "User updated successfully!",

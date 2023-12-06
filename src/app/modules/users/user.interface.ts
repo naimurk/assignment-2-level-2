@@ -19,13 +19,13 @@ export type TUserName = {
     lastName: string
 }
 export type TUser = {
-    userId : string;
-    userName : string;
+    userId : number;
+    username : string;
     password: string;
     fullName: TUserName
     age: number;
     email: string;
-    isActive: true | false;
+    isActive: boolean;
     hobbies: Array<string>;
     address : TAddress
     orders: Array<TOrder> | [];
@@ -33,19 +33,9 @@ export type TUser = {
 }
 
 
-// for instance
-// export type UserMethods = {
-//     isUserExists(passId: string): Promise<TUser | null>
-//   }
-  
-//   // for instance
-//   export type UserModel = Model<
-//   TUser,
-//   Record<string, never>,
-//   UserMethods
-//   >
+
 
 export interface UserModel extends Model<TUser> {
-    isUserExists(userId: string, email?:string): Promise<TUser | null>
+    isUserIdAndEmailExist(userId: string | number, email?:string): Promise<TUser | null>
   }
   
