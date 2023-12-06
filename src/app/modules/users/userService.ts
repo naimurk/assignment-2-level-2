@@ -1,3 +1,4 @@
+
 import { TOrder, TUser } from "./user.interface";
 import { User } from "./user.model";
 
@@ -139,82 +140,59 @@ const getOrder = async (id: string) => {
 
 };
 
-// get all price for specified user order
+
+
 const getAllPrice = async (id: string) => {
   const result = await User.isUserIdAndEmailExist(id);
-  
   if (!result || result === null) {
     throw new Error("user not found");
   }
   
-  // console.log("hello")
 
-  const data =  await User.aggregate([
-    { $match: { userId: id } },
-    
-    
+  const orderData = await User.findOne({userId: Number(id)})
 
-  ]);
-
+  if( orderData &&  orderData?.orders.length> 0){
+    const data = await User.aggregate([
+      { $match: { userId: Number(id) } },
+      { $unwind: "$orders" },
+      {
+        $project: {
+          productName: "$orders.productName",
+          price: "$orders.price",
+          quantity: "$orders.quantity",
+          totalPrice: { $multiply: ["$orders.price", "$orders.quantity"] },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalPrice: { $sum: "$totalPrice" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          totalPrice: 1
+          
+        },
+      },
+      
+    ])
   
+    return data.length> 0 ? data[0]: {} 
+  }
 
-  return data
+  else {
+    throw new Error ("you don't have order information")
+  }
 
  
 };
 
 
-// { $unwind: "$orders" },
-    // {
-    //   $project: {
-    //     productName: 1,
-    //     price: 1,
-    //     quantity: 1,
-    //     totalPrice: { $multiply: ["$orders.price", "$orders.quantity"] },
-    //   },
-    // },
-    // {
-    //   $group: { _id: "userId", totalPrice: { $sum: "$totalPrice" } },
-    // },
-    // {$project: {_id: 0 , }}
 
 
-// // get all price for specified user order
-// const getAllPrice = async (id: string) => {
-//   const result = await User.isUserIdAndEmailExist(id);
 
-//   if (!result || result === null) {
-//     throw new Error("user not found");
-//   }
-
-//   const data = await User.aggregate([
-//     { $match: { userId: id } },
-//     { $unwind: "$orders" },
-//     {
-//       $project: {
-//         _id: 0,
-//         productName: "$orders.productName",
-//         price: "$orders.price",
-//         quantity: "$orders.quantity",
-//         totalPrice: { $multiply: ["$orders.price", "$orders.quantity"] },
-//       },
-//     },
-//     {
-//       $group: {
-//         _id: null,
-//         totalPrice: { $sum: "$totalPrice" },
-//       },
-//     },
-//     {
-//       $project: {
-//         _id: 0,
-//         totalPrice: 1,
-//       },
-//     },
-//   ]);
-
-//   return data;
-// };
 
 export const userService = {
   createUserIntoDb,
