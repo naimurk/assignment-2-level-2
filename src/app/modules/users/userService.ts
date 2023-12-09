@@ -45,7 +45,7 @@ const getSpecificUser = async (id: string) => {
 // specific user update
 const updateSpecificUser = async (id: string, updateData: Partial<TUser>) => {
   
-    const { username, address, age, email, fullName, hobbies, isActive } =
+    const { username, userId, address, age, email, fullName, hobbies, isActive } =
       updateData;
 
     // console.log(updateData)
@@ -57,7 +57,6 @@ const updateSpecificUser = async (id: string, updateData: Partial<TUser>) => {
       throw new Error("user not found");
     }
 
-  
     const result = await User.updateOne(
       { userId: id },
       {
